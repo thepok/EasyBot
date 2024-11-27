@@ -64,3 +64,7 @@ The robot uses Feetech STS series servos, communicating via TTL serial at 1Mbps.
 - Temperature monitoring
 - Current sensing
 - Configurable PID control
+
+
+
+Thanks to https://github.com/matthieuvigne/STS_servos for the servo driver code i simply had to translate to python
