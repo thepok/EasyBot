@@ -5,12 +5,12 @@ A Python-based graphical user interface for controlling a robotic arm with multi
 ## Features
 
 - Individual control of 6 servo joints:
-  - Base rotation (600-3300 position range)
-  - Shoulder (900-3000 position range)
-  - Elbow (1000-3200 position range)
-  - Wrist bend (1000-3200 position range)
-  - Wrist rotation (0-2700 position range)
-  - Gripper (1400-2000 position range, closed to open)
+  - Base rotation
+  - Shoulder
+  - Elbow
+  - Wrist bend
+  - Wrist rotation
+  - Gripper
 - Fine and coarse adjustment controls for each joint
 - Extend/retract functionality
 - Simple tkinter-based interface
