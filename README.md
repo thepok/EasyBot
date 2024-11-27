@@ -1,6 +1,6 @@
 # Robot Control GUI
 
-A Python-based graphical user interface for controlling a robotic arm with multiple servo joints.
+A Python-based system for controlling a robotic arm with multiple servo joints, featuring both manual GUI control and AI-assisted vision-based control.
 
 ## Features
 
@@ -11,22 +11,22 @@ A Python-based graphical user interface for controlling a robotic arm with multi
   - Wrist bend
   - Wrist rotation
   - Gripper
-- Fine and coarse adjustment controls for each joint
+- Manual control via GUI with fine/coarse adjustments
+- AI-assisted control using GPT-4V vision model
+- Real-time camera feedback
+- Text-to-speech feedback
 - Extend/retract functionality
 - Simple tkinter-based interface
 
-## Requirements
-
-- Python 3.x
-- tkinter (usually comes with Python)
-- pyserial (for servo communication)
-- Custom modules:
-  - `robot.py` - Robot control logic and servo definitions
-  - `Driver.py` - Low-level servo driver implementation
-
 ## File Structure
 
-- `gui.py` - Main GUI implementation using tkinter
+- `agent.py` - AI vision control implementation
+  - Integrates GPT-4V for visual analysis
+  - Processes camera input
+  - Controls robot based on AI feedback
+  - Provides text-to-speech status updates
+
+- `gui.py` - Manual GUI control implementation
   - Creates control buttons for each servo
   - Handles user input and robot control
   - Provides fine/coarse adjustment options
@@ -43,7 +43,7 @@ A Python-based graphical user interface for controlling a robotic arm with multi
 
 ## Usage
 
-Run the GUI:
+For manual control:
 
 ```bash
 python gui.py
@@ -68,3 +68,4 @@ The robot uses Feetech STS series servos, communicating via TTL serial at 1Mbps.
 
 
 Thanks to https://github.com/matthieuvigne/STS_servos for the servo driver code i simply had to translate to python
+Thanks to https://github.com/TheRobotStudio/SO-ARM100 for the great 3d printable open source arm design

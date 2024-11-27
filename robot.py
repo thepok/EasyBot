@@ -79,3 +79,8 @@ class Robot:
 
     def set_servo_position(self, servo_id: ServoId, position: int):
         self._update_position(servo_id, position)
+
+    def move_relative(self, servo_id: ServoId, offset: int):
+        """Move servo relative to current position by adding/subtracting offset"""
+        new_pos = self.positions[servo_id] + offset
+        self._update_position(servo_id, new_pos)
