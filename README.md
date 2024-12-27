@@ -41,6 +41,24 @@ A Python-based system for controlling a robotic arm with multiple servo joints, 
   - Handles serial communication protocol
   - Manages servo registers and commands
 
+## Hardware Notes
+
+The robot uses Feetech STS series servos, communicating via TTL serial at 1Mbps. Each servo has:
+- Position feedback
+- Temperature monitoring
+- Current sensing
+- Configurable PID control
+
+## Driver Installation
+
+Before you can control the servos, you need to install the CH341 USB-to-Serial driver. The driver installer can be found in the `servotools` directory:
+1. Run `CH341SER.EXE` from the `servotools` directory
+2. Follow the installation prompts
+3. Once installed, the servos can be controlled via the USB connection
+
+Thanks to https://github.com/matthieuvigne/STS_servos for the servo driver code i simply had to translate to python
+Thanks to https://github.com/TheRobotStudio/SO-ARM100 for the great 3d printable open source arm design
+
 ## Usage
 
 For manual control:
@@ -56,16 +74,3 @@ Each joint can be controlled with:
 The extend/retract feature uses:
 - `<<` / `>>` for fine movements (±10 units)
 - `-` / `+` for larger movements (±50 units)
-
-## Hardware Notes
-
-The robot uses Feetech STS series servos, communicating via TTL serial at 1Mbps. Each servo has:
-- Position feedback
-- Temperature monitoring
-- Current sensing
-- Configurable PID control
-
-
-
-Thanks to https://github.com/matthieuvigne/STS_servos for the servo driver code i simply had to translate to python
-Thanks to https://github.com/TheRobotStudio/SO-ARM100 for the great 3d printable open source arm design
