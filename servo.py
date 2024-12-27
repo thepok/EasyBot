@@ -9,10 +9,11 @@ class ServoLimits:
     default_pos: int
 
 class Servo:
-    def __init__(self, servo_id: int, driver: STSServoDriver, limits: ServoLimits):
+    def __init__(self, servo_id: int, driver: STSServoDriver, limits: ServoLimits, name: str = None):
         self.id = servo_id
         self.driver = driver
         self.limits = limits
+        self.name = name if name is not None else f"Servo {servo_id}"
 
     @property
     def current_position(self) -> int:
@@ -43,4 +44,9 @@ class Servo:
         """Get percentage of total movement range available"""
         total_range = self.limits.max_pos - self.limits.min_pos
         current_from_min = self.current_position - self.limits.min_pos
-        return (current_from_min / total_range) * 100 
+        return (current_from_min / total_range) * 100
+
+    @property
+    def current_torque(self) -> int:
+        """Get the current torque/current of the servo"""
+        return self.driver.get_current_torque(self.id) 

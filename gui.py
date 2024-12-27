@@ -25,6 +25,13 @@ class RobotGUI:
         # Create extend controls
         self.create_extend_controls()
 
+        # Start updating status
+        self.update_status()
+
+    def update_status(self):
+        self.robot.print_status()
+        self.window.after(100, self.update_status)  # Update every 100ms
+
     def button_held(self):
         if self.repeat_action and self.is_repeating:
             self.repeat_action()
