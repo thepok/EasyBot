@@ -28,7 +28,7 @@ class Servos:
             # Move cursor up and clear lines
             print(f"\033[{self._last_table_lines}A\033[J", end="")
             
-        headers = ["ID", "Name", "Position", "Min", "Max", "Default", "Range %", "Torque"]
+        headers = ["ID", "Name", "Position", "Target", "Min", "Max", "Default", "Range %", "Torque"]
         data = []
         
         for servo in self.servos:
@@ -36,6 +36,7 @@ class Servos:
                 servo.id,
                 servo.name,
                 servo.current_position,
+                servo.target_position,
                 servo.limits.min_pos,
                 servo.limits.max_pos,
                 servo.limits.default_pos,

@@ -1,0 +1,2 @@
+If you want to set the servo to the middle position, you only need to move the robotic arm joint to the desired position by hand and press the button marked in the picture. That's all
+Change address 40 to 128 (this disables torque too, so if needed enable it again)

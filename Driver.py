@@ -148,6 +148,13 @@ class STSServoDriver:
         if response:
             return struct.unpack('<H', bytes(response))[0]
         return None
+    
+    def get_target_position(self, servo_id):
+        """Get the target position of the servo."""
+        response = self.read_register(servo_id, STSRegisters.TARGET_POSITION, 2)
+        if response:
+            return struct.unpack('<H', bytes(response))[0]
+        return None
 
     def get_current_torque(self, servo_id):
         """Get the current torque/current of the servo."""

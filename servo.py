@@ -19,6 +19,11 @@ class Servo:
     def current_position(self) -> int:
         return self.driver.get_current_position(self.id)
 
+    @property
+    def target_position(self) -> int:
+        """Get the target position the servo is moving to"""
+        return self.driver.get_target_position(self.id)
+
     def set_position(self, position: int) -> None:
         """Set servo position while respecting limits"""
         clamped_position = max(self.limits.min_pos, min(position, self.limits.max_pos))

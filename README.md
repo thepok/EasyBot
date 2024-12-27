@@ -17,6 +17,11 @@ A Python-based system for controlling a robotic arm with multiple servo joints, 
 - Text-to-speech feedback
 - Extend/retract functionality
 - Simple tkinter-based interface
+- Experimental deformable control system:
+  - Monitors servo torque in real-time
+  - Automatically adjusts positions when resistance is detected
+  - Useful for testing soft/compliant robot behaviors
+  - Helps prevent servo damage from excessive force
 
 ## File Structure
 
@@ -25,6 +30,12 @@ A Python-based system for controlling a robotic arm with multiple servo joints, 
   - Processes camera input
   - Controls robot based on AI feedback
   - Provides text-to-speech status updates
+
+- `deformable.py` - Experimental deformable control system
+  - Implements soft/compliant behavior for servos
+  - Monitors torque and adjusts positions automatically
+  - Useful for testing and debugging compliant motion
+  - Runs in a separate thread for non-blocking operation
 
 - `gui.py` - Manual GUI control implementation
   - Creates control buttons for each servo
