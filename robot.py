@@ -2,15 +2,7 @@ import time
 from Driver import STSServoDriver
 import serial
 from enum import IntEnum
-
-# (servo_id)
-# (1)Gripper is open at position 2000 and closed at position 1400
-# (2)Wrist is possible to rotate from 0 to 2700 to save the cable
-# (3)Wrist joint is possible to bend from 1000 to 3200
-# (4)Elbow joint is possible to bend from 1000 to 3200
-# (5)Shoulder joint is able to bend from 900 to 3000 
-# (6)Shoulder (base) rotator is possible to rotate from 600 to 3300
-
+from servo import Servo, ServoLimits
 
 class ServoId(IntEnum):
     GRIPPER = 1
@@ -21,6 +13,16 @@ class ServoId(IntEnum):
     BASE = 6          # Base rotation
 
 class Robot:
+    # Robot-specific servo configuration
+    SERVO_LIMITS = {
+        ServoId.GRIPPER: ServoLimits(1400, 2000, 2000),  # Default to open
+        ServoId.WRIST_ROTATE: ServoLimits(0, 2700, 1350),
+        ServoId.WRIST_BEND: ServoLimits(1000, 3200, 2100),
+        ServoId.ELBOW: ServoLimits(1000, 3200, 2100),
+        ServoId.SHOULDER: ServoLimits(900, 3000, 1950),
+        ServoId.BASE: ServoLimits(600, 3300, 1950)
+    }
+
     def __init__(self):
         self.driver = None
         for port in range(1, 10):
@@ -35,52 +37,50 @@ class Robot:
         if not self.driver.ping(ServoId.GRIPPER):
             raise Exception("Gripper servo not responding")
             
-        # Initialize position tracking
-        self.positions = {
-            ServoId.GRIPPER: self.driver.get_current_position(ServoId.GRIPPER),
-            ServoId.WRIST_ROTATE: self.driver.get_current_position(ServoId.WRIST_ROTATE),
-            ServoId.WRIST_BEND: self.driver.get_current_position(ServoId.WRIST_BEND),
-            ServoId.ELBOW: self.driver.get_current_position(ServoId.ELBOW),
-            ServoId.SHOULDER: self.driver.get_current_position(ServoId.SHOULDER),
-            ServoId.BASE: self.driver.get_current_position(ServoId.BASE)
+        # Initialize servos with their limits
+        self.servos = {
+            servo_id: Servo(servo_id, self.driver, self.SERVO_LIMITS[servo_id])
+            for servo_id in ServoId
         }
 
-    def _update_position(self, servo_id: ServoId, position: int):
-        """Internal method to update tracked position and move servo"""
-        self.positions[servo_id] = position
-        self.driver.set_target_position(servo_id, position)
+        self.reset_all_servos()
 
     def grab(self):
         """Close the gripper"""
-        self._update_position(ServoId.GRIPPER, 1400)
+        self.servos[ServoId.GRIPPER].set_position(1400)
 
     def release(self):
         """Open the gripper"""
-        self._update_position(ServoId.GRIPPER, 2000)
+        self.servos[ServoId.GRIPPER].set_position(2000)
 
-    def rotate_wrist_to(self, degrees: int):
-        """Rotate the wrist (0 to 2700)"""
-        self._update_position(ServoId.WRIST_ROTATE, degrees)
+    def rotate_wrist_to(self, position: int):
+        """Rotate the wrist"""
+        self.servos[ServoId.WRIST_ROTATE].set_position(position)
 
-    def rotate_elbow_to(self, degrees: int):
-        """Rotate the elbow (1000 to 3200)"""
-        self._update_position(ServoId.ELBOW, degrees)
+    def rotate_elbow_to(self, position: int):
+        """Rotate the elbow"""
+        self.servos[ServoId.ELBOW].set_position(position)
 
     def extend(self, ticks: int):
-        # Calculate new positions
-        new_shoulder = self.positions[ServoId.SHOULDER] - ticks * 0.5
-        new_elbow = self.positions[ServoId.ELBOW] + ticks
-        new_wrist = self.positions[ServoId.WRIST_BEND] - ticks * 0.5
-        
-        # Update all positions
-        self._update_position(ServoId.SHOULDER, int(new_shoulder))
-        self._update_position(ServoId.ELBOW, int(new_elbow))
-        self._update_position(ServoId.WRIST_BEND, int(new_wrist))
+        """Coordinated movement to extend/retract the arm"""
+        self.servos[ServoId.SHOULDER].move_relative(int(-ticks * 0.5))
+        self.servos[ServoId.ELBOW].move_relative(ticks)
+        self.servos[ServoId.WRIST_BEND].move_relative(int(-ticks * 0.5))
 
     def set_servo_position(self, servo_id: ServoId, position: int):
-        self._update_position(servo_id, position)
+        """Set position of a specific servo"""
+        self.servos[servo_id].set_position(position)
 
     def move_relative(self, servo_id: ServoId, offset: int):
-        """Move servo relative to current position by adding/subtracting offset"""
-        new_pos = self.positions[servo_id] + offset
-        self._update_position(servo_id, new_pos)
+        """Move a specific servo relative to its current position"""
+        self.servos[servo_id].move_relative(offset)
+
+    def reset_all_servos(self):
+        """Reset all servos to their default positions"""
+        for servo in self.servos.values():
+            servo.reset_to_default()
+
+    @property
+    def positions(self):
+        """Get current positions of all servos"""
+        return {servo_id: servo.current_position for servo_id, servo in self.servos.items()}
