@@ -1,6 +1,6 @@
 # Robot Control GUI
 
-A Python-based system for controlling a robotic arm with multiple servo joints, featuring both manual GUI control and AI-assisted vision-based control.
+A Python-based system for controlling a SO-ARM100 with multiple STS3215 Servo joints, featuring both manual GUI control and AI-assisted vision-based control. General usefull is the python binding for the STS3215 servos!
 
 ## Features
 
